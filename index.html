@@ -7,15 +7,18 @@
   </head>
   <body>
     <h1>To Do List</h1>
-    <!-- <button id="add">&#43;</button> -->
 
     <form action="#" id="toDoForm">
-      <button type="submit" id="addUnder">+</button>
-      <!-- <button id="edit">x</button> -->
-      <!-- <input type="checkbox" /> -->
-      <input type="text" id="text" placeholder="Add something to do!" />
+      <input type="submit" id="submit" value="+" />
+      <input
+        type="text"
+        id="textInput"
+        placeholder="Add something to do!"
+        required
+      />
     </form>
-    <ul id="entry"></ul>
+    <ul id="list"></ul>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="todo.js"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 * {
-  font-family: "Source Sans 3", sans-serif;
+  font-family: 'Source Sans 3', sans-serif;
   font-size: 15px;
   color: rgb(46, 46, 46);
 }
@@ -12,42 +12,57 @@ h1 {
   font-size: 30px;
 }
 
+#submit {
+  background-color: rgba(15, 15, 15, 0.1);
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+input {
+  border-style: none;
+  background-color: transparent;
+}
+
 li {
   list-style-type: none;
 }
 
 li:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.048);
+}
+
+li:hover > button {
+  opacity: 1;
 }
 
 button {
+  opacity: 0;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   padding: 1px 3px;
   border-style: none;
   background-color: transparent;
 }
 
 button:hover {
-  /* background-color: rgba(15, 15, 15, 0.1); */
-  color: rgba(15, 15, 15, 0.3);
+  opacity: 1;
+  color: white;
+  background-color: rgba(241, 75, 75, 0.753);
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-[type="submit"] {
-  background-color: rgba(15, 15, 15, 0.1);
-  color: black;
+[type='checkbox'] {
+  outline: 2px solid rgb(69, 69, 69);
+  /* position: absolute; */
+  /* opacity: 0; */
+  cursor: pointer;
+  /* height: 0;
+  width: 0; */
 }
 
-[type="checkbox"] {
-  outline: 1.5px solid rgb(69, 69, 69);
-}
-
-.crossed [type="text"] {
+.strikethrough:checked + span {
   text-decoration: line-through;
-  color: rgb(69, 69, 69);
-}
-
-input {
-  border-style: none;
-  background-color: transparent;
 }

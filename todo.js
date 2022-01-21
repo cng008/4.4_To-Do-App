@@ -1,80 +1,63 @@
-/*Part 1
-For this assignment you will be combining your knowledge of DOM access and events to build a todo app!
-As a user, you should be able to:
+// id to keep track of which element to remove
+let currentIdx = 0;
 
-Add a new todo (by submitting a form)
-Mark a todo as completed (cross out the text of the todo)
-Remove a todo
+const $toDoForm = $('#toDoForm');
+const $list = $('#list');
 
-Part 2
-Now that you have a functioning todo app, save your todos in localStorage! 
-Make sure that when the page refreshes, the todos on the page remain there.*/
+// retrieve from localStorage
+const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+for (let i = 0; i < savedTodos.length; i++) {
+  $('ul').append(`
+    <li id=${i}>
+      <button type="button" id="remove">X</button>
+      <input type="checkbox" class="strikethrough"/>
+      <span>${savedTodos[i].task}</span>
+    </li>
+  `);
+  $('li').isCompleted = false;
 
-const toggleSwitch = document.querySelector('input[type="checkbox"]');
-//CHECK TO SEE IF ITEM CROSSED ENABLED IS IN LOCAL STORAGE
-if (localStorage.getItem("isDone")) {
-  document.body.className = "crossed"; //if there, add to class 'checked' ^
-  toggleSwitch.checked = true; //keeps item checked
+  // save to localStorage
+  $('li').isCompleted = savedTodos[i].isCompleted ? true : false;
+  if ($('li').isCompleted) {
+    $('ul').style.textDecoration = 'line-through';
+  }
 }
 
-//WHEN WE CHECK OFF, UPDATE LOCAL STORAGE & CHANGE THE className on li
-toggleSwitch.addEventListener("click", function (e) {
-  const { checked } = toggleSwitch;
-  if (checked) {
-    // set localStorage based on checked
-    localStorage.setItem("isDone", true);
-  } else {
-    localStorage.removeItem("isDone"); //removed object rather than saying 'false'
-  }
-  document.body.className = checked ? "crossed" : ""; //if checked = crossed; not = do nothing
+$toDoForm.on('submit', e => {
+  e.preventDefault();
+
+  const input = $('#textInput').val();
+  const addToList = addToDo({ input, currentIdx, isCompleted: false });
+
+  currentIdx++;
+
+  $list.prepend(addToList);
+  $toDoForm.trigger('reset');
+
+  // save to localStorage
+  savedTodos.unshift({ id: currentIdx, task: input, isCompleted: false });
+  localStorage.setItem('todos', JSON.stringify(savedTodos));
 });
 
-// const form = document.querySelector("#toDo");
-const toDoList = document.querySelector("#toDoList");
-// const li = document.querySelectorAll("li");
-const edit = document.querySelector("#edit");
-// const add = document.querySelector("#add");
-const addUnder = document.querySelector("#addUnder #add");
-// const input = document.querySelector('input[type="text"]');
+// DELETE A TODO
+$('ul').on('click', 'button', e => {
+  // remove it from the DOM
+  $(e.target).closest('li').remove();
 
-//BUTTON EVENTS
-toDoList.addEventListener("click", function (e) {
-  if (e.target === edit) {
-    e.preventDefault();
-    e.target.parentElement.remove(); //delete item
-  } else if (e.target === addUnder) {
-    e.preventDefault();
-    return addNew(); //run function and add new li
-  }
+  // remove it from localStorage
+  savedTodos.splice(e.target.id, 1);
+  localStorage.setItem('todos', JSON.stringify(savedTodos)); //BUG
 });
 
-//add item under clicked + button
-function addNew() {
-  const newToDo = document.createElement("li");
-  const newAddBtn = document.createElement("button");
-  const newEditBtn = document.createElement("button");
-  const newCheck = document.createElement("input");
-  const newInput = document.createElement("input");
-  // const newLine = newToDo + newBtns + newInput;
-
-  for (let li of newToDo) {
-    newToDo.append(newAddBtn);
-    newAddBtn.id = "add";
-    newAddBtn.innerHTML = "&#10303;"; //https://www.htmlsymbols.xyz/unicode/U+283F
-
-    newToDo.append(newEditBtn);
-    newEditBtn.id = "edit";
-    newEditBtn.innerHTML = "&#43;"; //https://www.htmlsymbols.xyz/unicode/U+002B
-
-    newToDo.append(newCheck);
-    newCheck.type = "checkbox";
-
-    newToDo.append(newInput);
-    newInput.type = "text";
-    newInput.placeholder = "Add something to do!";
-  }
-  toDoList.append(newToDo);
-
-  //   localStorage.setItem("newLine", JSON.stringify(newLine));
-  //   JSON.parse(localStorage.getItem(newLine));
-}
+// accepts an input value and currentIdx and returns a string of HTML
+addToDo = todo => {
+  return `
+    <li id=${todo.currentIdx}>
+      <button type="button" id="remove">X</button>
+      <label for="checkbox">
+        <input type="checkbox" class="strikethrough"/>
+      </label>
+      <span>${todo.input}</span>
+    </li>
+  `;
+};
